@@ -29,7 +29,14 @@ if errorlevel 1 (
     exit /b
 )
 
+:: Check if TempFile contains valid version information
+set "Newver="
 for /f "delims=" %%i in (%TempFile%) do set "Newver=%%i"
+if "%Newver%"=="" (
+    echo Failed to read version info from %TempFile%.
+    pause
+    exit /b
+)
 
 :: Example version; ideally this should be dynamically managed
 set "Ver=0.0.1"
@@ -189,7 +196,13 @@ if "%choice%"=="1" (
     
     goto Loop
 ) else if "%choice%"=="Update" (
-    echo Update feature not yet implemented.
+    if "%VersionUpdateNeeded%"=="true" (
+        start https://github.com/NittarPP/Sou-Update/releases/download/Update/Sou.Studio.%Newver1%.%Newver2%.%Newver3%.bat
+    ) else (
+        echo.
+        echo You have the latest version.
+        echo.
+    )
 ) else (
     echo Invalid choice. Please enter a number from 1 to 10.
 )
