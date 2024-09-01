@@ -1,80 +1,25 @@
-{
-  "FLogNetwork": "7",
-  "FFlagUseNewAnimationSystem": "False",
-  "FFlagDebugDisableTelemetryEventIngest": "True",
-  "FFlagTweenOptimizations": "True",
-  "DFIntCSGLevelOfDetailSwitchingDistance": "0",
-  "FFlagDebugSkyGray": "True",
-  "DFFlagDebugPerfMode": "False",
-  "DFFlagBrowserTrackerIdTelemetryEnabled": "False",
-  "DFStringTelemetryV2Url": "null",
-  "FFlagFixGraphicsQuality": "True",
-  "FFlagEnableNewHeapSnapshots": "False",
-  "FFlagNewNetworking": "False",
-  "FFlagPreloadAllFonts": "False",
-  "FStringGamesUrlPath": "/games/",
-  "DFFlagDisableFastLogTelemetry": "True",
-  "FFlagNewLightAttenuation": "True",
-  "FFlagDebugGraphicsPreferD3D11": "True",
-  "FFlagEnableTerrainFoliageOptimizations": "True",
-  "FFlagDebugDisableTelemetryPoint": "True",
-  "DFStringAltTelegrafHTTPTransportUrl": "null",
-  "FFlagEnableHumanoidLuaSideCaching": "False",
-  "DFFlagTextureQualityOverrideEnabled": "True",
-  "DFIntCSGLevelOfDetailSwitchingDistanceL34": "0",
-  "FFlagFastGPULightCulling3": "True",
-  "FFlagEnableNewInput": "True",
-  "FFlagCommitToGraphicsQualityFix": "True",
-  "FFlagAnimatePhysics": "False",
-  "FFlagSimIslandizerManager": "false",
-  "FFlagDebugDisableTelemetryEphemeralCounter": "True",
-  "FFlagDebugDisableTelemetryV2Stat": "True",
-  "FFlagUseUnifiedRenderStepped": "False",
-  "FFlagUseParticlesV2": "False",
-  "DFIntCSGLevelOfDetailSwitchingDistanceL12": "0",
-  "FFlagTaskSchedulerLimitTargetFpsTo2402": "False",
-  "FFlagUseDeferredContext": "False",
-  "FFlagOptimizeEmotes": "False",
-  "DFStringLightstepToken": "null",
-  "FFlagFixScalingModelRendering": "False",
-  "DFIntNewRunningBaseAltitudeD": "45",
-  "FFlagDebugDisableTelemetryV2Counter": "True",
-  "DFIntClientLightingTechnologyChangedTelemetryHundredthsPercent": "0",
-  "FFlagUseDynamicSun": "False",
-  "DFFlagDebugPauseVoxelizer": "True",
-  "DFStringTelegrafHTTPTransportUrl": "null",
-  "DFStringRobloxAnalyticsURL": "null",
-  "DFIntLightstepHTTPTransportHundredthsPercent2": "0",
-  "DFStringLightstepHTTPTransportUrlHost": "null",
-  "DFStringCrashUploadToBacktraceWindowsPlayerToken": "null",
-  "FFlagEnableTerrainOptimizations": "True",
-  "DFFlagDisableDPIScale": "True",
-  "FFlagLuaAppSystemBar": "False",
-  "FFlagFixMeshPartScaling": "False",
-  "DFStringCrashUploadToBacktraceBaseUrl": "null",
-  "DFStringCrashUploadToBacktraceMacPlayerToken": "null",
-  "DFIntS2PhysicsSenderRate": "250",
-  "DFIntTaskSchedulerTargetFps": "999999",
-  "FFlagEnableLightAttachToPart": "False",
-  "FFlagDebugDisableTelemetryEphemeralStat": "True",
-  "FFlagDebugDisableTelemetryV2Event": "True",
-  "FFlagAdServiceEnabled": "False",
-  "DFIntCSGLevelOfDetailSwitchingDistanceL23": "0",
-  "DFStringHttpPointsReporterUrl": "null",
-  "FIntRenderShadowIntensity": "0",
-  "FFlagDebugCrashReports": "False",
-  "FStringCoreScriptBacktraceErrorUploadToken": "null",
-  "FFlagDebugDisplayFPS": "False",
-  "DFFlagEnableLightstepReporting2": "False",
-  "DFStringAltHttpPointsReporterUrl": "null",
-  "DFStringLightstepHTTPTransportUrlPath": "null",
-  "DFIntRenderingThrottleDelayInMS": "1",
-  "DFIntRunningBaseOrientationP": "115",
-  "FFlagHandleAltEnterFullscreenManually": "False",
-  "DFFlagDebugRenderForceTechnologyVoxel": "True",
-  "DFFlagBaseNetworkMetrics": "False",
-  "FFlagDisablePostFx": "True",
-  "FIntTerrainArraySliceSize": "0",
-  "FIntDebugForceMSAASamples": "1",
-  "FStringWhitelistVerifiedUserId": "2308948481"
-}
+# SpeedWave - PC Speed Booster
+
+**SpeedWave** is a powerful tool designed to optimize and boost your PC's performance. Whether you're a gamer, a professional, or simply a PC enthusiast, SpeedWave helps you keep your system running smoothly with a variety of features.
+
+## Features
+
+- **Clear Temporary Files**: Remove unnecessary temporary files to free up disk space.
+- **Run Disk Cleanup**: Perform a comprehensive cleanup of your system’s hard drive.
+- **Defragment Drives**: Optimize your drives for better performance.
+- **Check Disk for Errors**: Scan and repair disk errors.
+- **Update System Drivers**: Check and update your system drivers.
+- **Turn Off Performance Optimizations**: Disable visual effects to improve performance.
+- **Gaming Optimization**: Apply settings and clean up to enhance gaming experience.
+- **Power Plan Management**: Set and clear power plans for better performance.
+- **Loop Clear Temp**: Continuously clear temporary files with a loop option.
+- **Backup and Restore**: Placeholder for future backup and restore features.
+- **System Integrity Check**: Perform a system file integrity check with `sfc /scannow`.
+
+## Installation
+
+To use SpeedWave, you need to clone this repository and run the script on a Windows machine:
+
+```bash
+git clone https://github.com/yourusername/SpeedWave.git
+cd SpeedWave
