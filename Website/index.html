@@ -3,10 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SpeedWave is the ultimate solution for optimizing and accelerating your PC. Enjoy a faster, more efficient computing experience with just a few clicks.">
+    <meta name="keywords" content="PC optimization, SpeedWave, computer speed, software, technology">
     <title>SpeedWave - Supercharge Your PC</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Roboto', sans-serif;
             background: linear-gradient(135deg, #1e3c72, #2a5298);
             color: #fff;
             margin: 0;
@@ -14,31 +18,63 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
+            overflow-x: hidden;
+            transition: background 0.5s ease-in-out;
         }
         header {
             background-color: #212a42;
             padding: 20px;
             text-align: center;
+            animation: fadeIn 1s ease-out;
+            position: relative;
+            z-index: 1001;
         }
         header h1 {
             margin: 0;
             font-size: 3em;
             letter-spacing: 2px;
             color: #66d36a;
+            animation: slideIn 1s ease-out;
         }
         header p {
             font-size: 1.2em;
             color: #bbb;
         }
+        .toolbar {
+            background-color: #1a2332;
+            padding: 10px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+        }
+        .toolbar a {
+            color: #66d36a;
+            text-decoration: none;
+            font-size: 1.2em;
+            margin: 0 15px;
+            transition: color 0.3s, transform 0.3s;
+        }
+        .toolbar a:hover {
+            color: #88f18e;
+            transform: scale(1.1);
+        }
         .container {
             flex: 1;
             width: 85%;
             margin: auto;
-            padding: 40px 0;
+            padding: 100px 0 40px;
+            animation: fadeInUp 1s ease-out;
         }
         .intro h2 {
             font-size: 2.2em;
             color: #66d36a;
+            margin-bottom: 20px;
+            animation: fadeIn 1s ease-out;
         }
         .intro p {
             font-size: 1.1em;
@@ -47,9 +83,11 @@
         }
         .features {
             display: flex;
+            flex-wrap: wrap;
             justify-content: space-between;
             margin: 30px 0;
             gap: 20px;
+            animation: fadeInUp 1s ease-out;
         }
         .feature {
             background: rgba(255, 255, 255, 0.1);
@@ -58,6 +96,12 @@
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
             text-align: center;
             flex: 1;
+            min-width: 250px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .feature:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
         }
         .feature h3 {
             font-size: 1.8em;
@@ -80,33 +124,147 @@
             text-decoration: none;
             font-size: 1.3em;
             border-radius: 5px;
-            transition: background-color 0.3s, transform 0.3s;
+            transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            animation: bounceIn 1s ease-out;
         }
         .cta a:hover {
             background-color: #88f18e;
             transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
         }
         footer {
             background-color: #1a2332;
             color: #bbb;
             text-align: center;
             padding: 20px 0;
+            animation: fadeIn 1s ease-out;
         }
         footer p {
             margin: 0;
             font-size: 1em;
         }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 0.5s ease-in-out;
+        }
+        .modal-content {
+            background: #1e55bb;
+            color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            position: relative;
+            transform: scale(0.8);
+            transition: transform 0.3s ease-in-out;
+        }
+        .modal-content.show {
+            transform: scale(1);
+        }
+        .modal-content h2 {
+            color: #66d36a;
+        }
+        .modal-content p {
+            font-size: 1.2em;
+            color: #fff;
+        }
+        .close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.5em;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideIn {
+            from { transform: translateY(-20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes bounceIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            50% { transform: scale(1.05); opacity: 1; }
+            100% { transform: scale(1); }
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2.5em;
+            }
+            header p {
+                font-size: 1em;
+            }
+            .toolbar a {
+                font-size: 1em;
+                margin: 0 10px;
+            }
+            .container {
+                width: 90%;
+                padding: 50px 0 20px;
+            }
+            .intro h2 {
+                font-size: 1.8em;
+            }
+            .intro p {
+                font-size: 1em;
+            }
+            .feature h3 {
+                font-size: 1.5em;
+            }
+            .feature p {
+                font-size: 0.9em;
+            }
+            .cta a {
+                font-size: 1.1em;
+                padding: 10px 20px;
+            }
+        }
+
+        /* Hidden Section */
+        .hidden {
+            display: none;
+        }
     </style>
 </head>
 <body>
+
+<!-- Toolbar -->
+<div class="toolbar">
+    <a href="#home" data-section="home">Home</a>
+    <a href="#how-to-use" data-section="how-to-use">How to Use</a>
+</div>
 
 <header>
     <h1>SpeedWave</h1>
     <p>Supercharge Your PC with Ease</p>
 </header>
 
-<div class="container">
+<div class="container" id="home">
+
     <section class="intro">
         <h2>Welcome to SpeedWave</h2>
         <p>SpeedWave is the ultimate solution for optimizing and accelerating your PC. With cutting-edge technology and a sleek interface, you can enjoy a faster, more efficient computing experience in just a few clicks.</p>
@@ -129,12 +287,81 @@
 
     <section class="cta">
         <h2>Download SpeedWave Today</h2>
-        <p><a href="#download">Get the Latest Version</a></p>
+        <p><a id="downloadBtn">Get the Latest Version</a></p>
+    </section>
+</div>
+
+<div class="container hidden" id="how-to-use">
+    <section class="intro">
+        <header>
+            <h1>How to Use SpeedWave</h1>
+            <p>Us Show you how to use</p>
+        </header>
     </section>
 </div>
 
 <footer>
     <p>&copy; 2024 SpeedWave. All rights reserved.</p>
 </footer>
+
+<!-- Modal -->
+<div id="downloadModal" class="modal">
+    <div class="modal-content">
+        <span class="close" id="closeModal">&times;</span>
+        <h2>Thanks for downloading!</h2>
+        <p>Your download is starting now. We appreciate you testing SpeedWave!</p>
+    </div>
+</div>
+
+<script>
+    // Function to hide all sections except the target
+    function showSection(targetId) {
+        document.querySelectorAll('.container').forEach(section => {
+            if (section.id === targetId) {
+                section.classList.remove('hidden');
+                section.scrollIntoView({ behavior: 'smooth' });
+            } else {
+                section.classList.add('hidden');
+            }
+        });
+    }
+
+    document.querySelectorAll('.toolbar a').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('data-section');
+            showSection(targetId);
+        });
+    });
+
+    document.getElementById('downloadBtn').addEventListener('click', function() {
+        // Open the download URL
+        window.location.href = 'https://github.com/NittarPP/SpeedWave/releases/download/Update/SpeedWave.bat';
+        
+        // Display the modal with animation
+        const modal = document.getElementById('downloadModal');
+        modal.style.display = 'flex';
+        setTimeout(() => {
+            document.querySelector('.modal-content').classList.add('show');
+        }, 10);
+    });
+
+    document.getElementById('closeModal').addEventListener('click', function() {
+        document.querySelector('.modal-content').classList.remove('show');
+        setTimeout(() => {
+            document.getElementById('downloadModal').style.display = 'none';
+        }, 300);
+    });
+
+    window.addEventListener('click', function(event) {
+        if (event.target === document.getElementById('downloadModal')) {
+            document.querySelector('.modal-content').classList.remove('show');
+            setTimeout(() => {
+                document.getElementById('downloadModal').style.display = 'none';
+            }, 300);
+        }
+    });
+</script>
+
 </body>
 </html>
