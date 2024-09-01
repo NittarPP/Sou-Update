@@ -21,5 +21,5 @@
 To use SpeedWave, you need to clone this repository and run the script on a Windows machine:
 
 ```bash
-git clone https://github.com/yourusername/SpeedWave.git
+git clone https://github.com/NittarPP/SpeedWave.git
 cd SpeedWave
