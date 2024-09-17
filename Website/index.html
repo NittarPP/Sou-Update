@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="SpeedWave is the ultimate solution for optimizing and accelerating your PC.">
+    <meta name="description" content="SpeedWave is the ultimate solution for optimizing and accelerating your PC. Enjoy a faster, more efficient computing experience with just a few clicks.">
     <meta name="keywords" content="PC optimization, SpeedWave, computer speed, software, technology">
     <title>SpeedWave - Supercharge Your PC</title>
     <link rel="icon" href="favicon.ico" type="image/x-icon">
@@ -23,9 +23,8 @@
         }
 
         header {
-            background: rgba(33, 42, 66, 0.7); /* Glass effect */
-            backdrop-filter: blur(10px);
-            padding: 10px 20px;
+            background-color: #212a42;
+            padding: 5px 20px;
             text-align: center;
             animation: fadeIn 1s ease-out;
             position: fixed;
@@ -33,34 +32,34 @@
             left: 0;
             width: 100%;
             z-index: 1001;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            transform: translateY(-100%);
+            animation: slideDown 0.6s forwards;
         }
 
         header h1 {
             margin: 0;
-            font-size: 2.5em;
+            font-size: 2.8em;
             letter-spacing: 2px;
             color: #66d36a;
-            animation: slideIn 1s ease-out;
         }
 
         header p {
-            font-size: 1em;
+            font-size: 1.2em;
             color: #bbb;
             margin: 5px 0 0;
         }
 
         .toolbar {
-            background: rgba(26, 35, 50, 0.7); /* Glass effect */
-            backdrop-filter: blur(10px);
-            padding: 10px;
+            background-color: #1a2332;
+            padding: 15px;
             position: fixed;
             top: 80px;
             left: 0;
             width: 100%;
             display: flex;
             justify-content: center;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
             z-index: 1000;
         }
 
@@ -68,8 +67,26 @@
             color: #66d36a;
             text-decoration: none;
             font-size: 1.2em;
-            margin: 0 15px;
+            margin: 0 20px;
             transition: color 0.3s, transform 0.3s;
+            position: relative;
+        }
+
+        .toolbar a::before {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: #66d36a;
+            transition: width 0.3s, left 0.3s;
+            transform: translateX(-50%);
+        }
+
+        .toolbar a:hover::before {
+            width: 100%;
+            left: 0;
         }
 
         .toolbar a:hover {
@@ -79,22 +96,21 @@
 
         .container {
             flex: 1;
-            width: 85%;
+            width: 90%;
             margin: auto;
-            padding: 120px 0 40px;
+            padding: 150px 0 40px;
             animation: fadeInUp 1s ease-out;
-            transition: transform 0.5s ease-in-out;
         }
 
         .intro h2 {
-            font-size: 2.2em;
+            font-size: 2.8em;
             color: #66d36a;
             margin-bottom: 20px;
             animation: fadeIn 1s ease-out;
         }
 
         .intro p {
-            font-size: 1.1em;
+            font-size: 1.3em;
             line-height: 1.8;
             color: #ddd;
         }
@@ -110,28 +126,28 @@
 
         .feature {
             background: rgba(255, 255, 255, 0.1);
-            padding: 20px;
+            padding: 25px;
             border-radius: 15px;
-            box-shadow: 0 0 25px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
             text-align: center;
             flex: 1;
             min-width: 250px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
         }
 
         .feature:hover {
-            transform: scale(1.05) rotate(2deg); /* Cool rotate on hover */
-            box-shadow: 0 0 30px rgba(0, 0, 0, 0.6);
+            transform: scale(1.1) rotate(1deg);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6);
         }
 
         .feature h3 {
-            font-size: 1.8em;
+            font-size: 2.2em;
             margin-bottom: 15px;
             color: #88f18e;
         }
 
         .feature p {
-            font-size: 1em;
+            font-size: 1.2em;
             line-height: 1.6;
             color: #ccc;
         }
@@ -142,29 +158,30 @@
         }
 
         .cta a {
-            background: linear-gradient(135deg, #66d36a, #88f18e);
+            background-color: #66d36a;
             color: #fff;
             padding: 15px 30px;
             text-decoration: none;
-            font-size: 1.3em;
-            border-radius: 10px;
-            transition: background 0.3s, transform 0.3s, box-shadow 0.3s;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+            font-size: 1.5em;
+            border-radius: 5px;
+            transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
             cursor: pointer;
+            animation: bounceIn 1s ease-out;
         }
 
         .cta a:hover {
-            background: linear-gradient(135deg, #88f18e, #66d36a);
-            transform: translateY(-5px) rotate(3deg);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+            background-color: #88f18e;
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
         }
 
         footer {
-            background: rgba(26, 35, 50, 0.7); /* Glass effect */
+            background-color: #1a2332;
             color: #bbb;
             text-align: center;
             padding: 20px 0;
-            backdrop-filter: blur(10px);
+            animation: fadeIn 1s ease-out;
         }
 
         footer p {
@@ -172,33 +189,7 @@
             font-size: 1em;
         }
 
-        /* Parallax Effect */
-        body::before {
-            content: '';
-            background: url('your-background-image.jpg') no-repeat center center fixed;
-            background-size: cover;
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            transform: translateZ(-1px) scale(2);
-        }
-
-        /* Scroll Reveal Animation */
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(50px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes bounceIn {
-            0% { transform: scale(0.5); opacity: 0; }
-            50% { transform: scale(1.05); opacity: 1; }
-            100% { transform: scale(1); }
-        }
-
-        /* Glassmorphism Modal */
+        /* Modal Styles */
         .modal {
             display: none;
             position: fixed;
@@ -206,22 +197,108 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.6);
+            background: rgba(0, 0, 0, 0.7);
             justify-content: center;
             align-items: center;
             z-index: 1000;
+            transition: opacity 0.5s ease-in-out;
+            overflow: hidden;
         }
 
         .modal-content {
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(20px);
+            background: #23437e;
             color: #fff;
             padding: 30px;
-            border-radius: 20px;
+            border-radius: 10px;
             text-align: center;
             max-width: 500px;
             width: 90%;
+            position: relative;
+            transform: scale(0.8);
             transition: transform 0.3s ease-in-out;
+        }
+
+        .modal-content.show {
+            transform: scale(1);
+        }
+
+        .modal-content h2 {
+            color: #66d36a;
+        }
+
+        .modal-content p {
+            font-size: 1.3em;
+            color: #fff;
+        }
+
+        .close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.8em;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-100%); }
+            to { transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            50% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); }
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2.5em;
+            }
+            header p {
+                font-size: 1em;
+            }
+            .toolbar a {
+                font-size: 1em;
+                margin: 0 10px;
+            }
+            .container {
+                width: 90%;
+                padding: 150px 0 20px;
+            }
+            .intro h2 {
+                font-size: 2.2em;
+            }
+            .intro p {
+                font-size: 1.1em;
+            }
+            .feature h3 {
+                font-size: 1.8em;
+            }
+            .feature p {
+                font-size: 1em;
+            }
+            .cta a {
+                font-size: 1.2em;
+                padding: 12px 24px;
+            }
+        }
+
+        /* Hidden Section */
+        .hidden {
+            display: none;
         }
     </style>
 </head>
@@ -242,37 +319,107 @@
 
     <section class="intro">
         <h2>Welcome to SpeedWave</h2>
-        <p>SpeedWave optimizes your computer for peak performance...</p>
+        <p>SpeedWave is the ultimate solution for optimizing and accelerating your PC. With cutting-edge technology and a sleek interface, you can enjoy a faster, more efficient computing experience in just a few clicks.</p>
     </section>
 
     <section class="features">
         <div class="feature">
-            <h3>Boost Speed</h3>
-            <p>Quickly and effectively improve your computer's speed...</p>
+            <h3>Maximize Performance</h3>
+            <p>Eliminate unnecessary files and processes to unlock your PC's full potential.</p>
         </div>
         <div class="feature">
-            <h3>Real-Time Monitoring</h3>
-            <p>Track your system performance...</p>
+            <h3>Boost Speed Instantly</h3>
+            <p>Feel the difference in speed whether you're gaming, working, or just browsing the web.</p>
+        </div>
+        <div class="feature">
+            <h3>User-Friendly Design</h3>
+            <p>With a modern, intuitive interface, SpeedWave is designed for users of all skill levels.</p>
         </div>
     </section>
 
-    <div class="cta">
-        <a href="download-link">Download Now</a>
-    </div>
+    <section class="cta" id="download">
+        <a href="javascript:void(0);" id="downloadBtn">Download Now</a>
+    </section>
+</div>
+
+<div class="container hidden" id="how-to-use">
+    <header>
+        <h1>How to Use SpeedWave</h1>
+        <p>We'll show you how to use it</p>
+    </header>
+    <section class="intro">
+        <!-- Content for "How to Use" section goes here -->
+    </section>
 </div>
 
 <footer>
-    <p>&copy; 2024 SpeedWave. All Rights Reserved.</p>
+    <p>&copy; 2024 SpeedWave. All rights reserved.</p>
 </footer>
 
+<!-- Modal -->
+<div id="downloadModal" class="modal">
+    <div class="modal-content">
+        <span class="close" id="closeModal" aria-label="Close modal">&times;</span>
+        <h2>Thanks for downloading!</h2>
+        <p>Your download is starting now. We appreciate you testing SpeedWave!</p>
+    </div>
+</div>
+
 <script>
-    // Smooth scroll for anchor links
-    document.querySelectorAll('.toolbar a').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
-            e.preventDefault();
-            document.querySelector(this.getAttribute('href')).scrollIntoView({
-                behavior: 'smooth'
+    document.addEventListener('DOMContentLoaded', function() {
+        const toolbarLinks = document.querySelectorAll('.toolbar a');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const downloadModal = document.getElementById('downloadModal');
+        const closeModal = document.getElementById('closeModal');
+        const modalContent = document.querySelector('.modal-content');
+
+        // Function to hide all sections except the target
+        function showSection(targetId) {
+            document.querySelectorAll('.container').forEach(section => {
+                if (section.id === targetId) {
+                    section.classList.remove('hidden');
+                    section.scrollIntoView({ behavior: 'smooth' });
+                } else {
+                    section.classList.add('hidden');
+                }
             });
+        }
+
+        toolbarLinks.forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('data-section');
+                showSection(targetId);
+            });
+        });
+
+        downloadBtn.addEventListener('click', function() {
+            // Open the modal
+            downloadModal.style.display = 'flex';
+            setTimeout(() => {
+                modalContent.classList.add('show');
+            }, 10);
+
+            // Redirect to download link after modal appears
+            setTimeout(() => {
+                window.location.href = 'https://github.com/NittarPP/SpeedWave/releases/download/Update/SpeedWave.bat';
+            }, 300); // Adjust timing as necessary
+        });
+
+        closeModal.addEventListener('click', function() {
+            modalContent.classList.remove('show');
+            setTimeout(() => {
+                downloadModal.style.display = 'none';
+            }, 300);
+        });
+
+        window.addEventListener('click', function(event) {
+            if (event.target === downloadModal) {
+                modalContent.classList.remove('show');
+                setTimeout(() => {
+                    downloadModal.style.display = 'none';
+                }, 300);
+            }
         });
     });
 </script>
