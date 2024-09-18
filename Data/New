@@ -191,11 +191,11 @@ if "%input%"=="1" (
     set "Auto_Update=false"
     goto :starter
 ) else (
-goto %input%
-if !errorlevel! neq 0 (
-    echo Failed to fetch content. >> %LogFile%
-    goto starter
-)
+    goto %input%
+    if !ERRORLEVEL! NEQ 0 (
+        echo Failed to fetch content. >> %LogFile%
+        goto starter
+    )
 )
 
 :Admin_Tool
@@ -257,63 +257,41 @@ if %ERRORLEVEL% neq 0 (
 )
 
 :: Download the update file
-curl -s --max-time 10 %UpdateURL% > "%UpdateFile%" 2>> "%LogFile%"
-if %ERRORLEVEL% neq 0 (
-    echo [%date% %time%] ERROR: Failed to download the new version. >> %LogFile%
-    echo ERROR: Failed to fetch the new version. See %LogFile% for details.
+curl -s --max-time 10 %UpdateURL% > "%UpdateFile%" 2>> %LogFile%
+if !ERRORLEVEL! NEQ 0 (
+    echo [%date% %time%] ERROR: Failed to download update file. >> %LogFile%
+    echo ERROR: Failed to download update file. Please check the log for details.
     pause
     exit /b
 )
-
-:: Check if update file exists
-if not exist "%UpdateFile%" (
-    echo [%date% %time%] ERROR: Update file not found after download. >> %LogFile%
-    echo ERROR: Update file not found. See %LogFile% for details.
-    pause
-    exit /b
-)
-
-:: Log success and run update
-echo [%date% %time%] Update downloaded successfully. >> %LogFile%
-echo Update downloaded successfully.
-echo Running the update...
 
 :: Execute the update script
-call "%UpdateFile%" >> "%LogFile%" 2>&1
-if %ERRORLEVEL% neq 0 (
-    echo [%date% %time%] ERROR: Failed to execute the update. >> %LogFile%
-    echo ERROR: Failed to run the update. See %LogFile% for details.
+start "" "%UpdateFile%"
+if !ERRORLEVEL! NEQ 0 (
+    echo [%date% %time%] ERROR: Failed to execute update script. >> %LogFile%
+    echo ERROR: Failed to execute update script. Please check the log for details.
     pause
     exit /b
 )
 
-:: Log successful execution
-echo [%date% %time%] Update executed successfully. >> %LogFile%
-echo Update executed successfully.
-
-:: Clean up
-del "%UpdateFile%"
-echo [%date% %time%] Cleaned up update file. >> %LogFile%
-
+echo [%date% %time%] Auto update script executed successfully. >> %LogFile%
+echo Auto update script executed successfully.
+pause
 exit /b
 
 :CTF
-del /s /f /q C:\Windows\Temp\*.* >nul 2>&1
-del /s /f /q C:\Users\%username%\AppData\Local\Temp\*.* >nul 2>&1
-echo.
-:: Your ASCII Art for Clear Temp Files
-echo.
-echo                                     Speed Wave Clear temporary files
-echo                                                    0%
-goto :FetchData
+cls
+echo Deleting temporary files...
+del /q /f "%temp%\*"
+echo Temporary files deleted.
+pause
+goto :starter
 
 :banner
 cls
 echo.
-echo           ███████╗██████╗ ███████╗███████╗██████╗     ██╗    ██╗ █████╗ ██╗   ██╗███████╗
-echo           ██╔════╝██╔══██╗██╔════╝██╔════╝██╔══██╗    ██║    ██║██╔══██╗██║   ██║██╔════╝
-echo           ███████╗██████╔╝█████╗  █████╗  ██║  ██║    ██║ █╗ ██║███████║██║   ██║█████╗  
-echo           ╚════██║██╔═══╝ ██╔══╝  ██╔══╝  ██║  ██║    ██║███╗██║██╔══██║╚██╗ ██╔╝██╔══╝  
-echo           ███████║██║     ███████╗███████╗██████╔╝    ╚███╔███╔╝██║  ██║ ╚████╔╝ ███████╗
-echo           ╚══════╝╚═╝     ╚══════╝╚══════╝╚═════╝      ╚══╝╚══╝ ╚═╝  ╚═╝  ╚═══╝  ╚══════╝
+echo        SpeedWave Optimizer
 echo.
+echo        Welcome to SpeedWave Optimizer!
+echo.
+goto :eof
