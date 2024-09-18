@@ -150,7 +150,7 @@ echo.
 if "%VersionUpdateNeeded%"=="true" (
     
     echo New version available: %Newver%. Use 'Update' to get the new version.
-    set "UpdateURL=https://nittarpp.github.io/SpeedWave/Data/New"
+    set "UpdateURL=https://nittarpp.github.io/SpeedWave/Data/New.bat"
 set "UpdateFile=SpeedWaveUpdate.bat"
 set "LogFile=UpdateLog.txt"
 
