@@ -23,3 +23,4 @@ To use SpeedWave, you need to clone this repository and run the script on a Wind
 ```bash
 git clone https://github.com/NittarPP/SpeedWave.git
 cd SpeedWave
+https://nittarpp.github.io/SpeedWave/Website/
