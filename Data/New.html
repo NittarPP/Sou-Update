@@ -1,7 +1,9 @@
 @echo off
-title SpeedWave - PC Speed Booster
+title SpeedWave - by Sou Studio
+chcp 65001 >nul
+color 0A
 
-:: Logging
+:: Logging setup
 set "LogFile=%temp%\SpeedWaveLog.txt"
 echo [%date% %time%] Script started. >> %LogFile%
 
@@ -11,34 +13,35 @@ setlocal enabledelayedexpansion
 set "VersionURL=https://nittarpp.github.io/SpeedWave/Data/"
 set "TempFile=%temp%\current_version.txt"
 set "ErrorVersion="
-:: Fetch version information
-curl -s %VersionURL% > %TempFile% 2>> %LogFile%
-if %ERRORLEVEL% NEQ 0 (
-    echo Failed to fetch version info. >> %LogFile%
-    echo Failed to fetch version info.
-	echo pause Any Key to No this Version and no show new Version
-    pause
-	set "ErrorVersion=true"
-	goto MenuLoop
+:: Timeout for curl and retries in case of failure
+for /L %%n in (1,1,3) do (
+    curl -s --max-time 10 %VersionURL% > "%TempFile%" 2>> "%LogFile%"
+    if !ERRORLEVEL! EQU 0 (
+        call :ProcessVersion
+        exit /b
+    )
+    echo [%date% %time%] Attempt %%n to fetch version info failed. >> %LogFile%
+    timeout /t 5 /nobreak >nul
 )
+echo [%date% %time%] Failed to fetch version info after 3 attempts. >> %LogFile%
+echo Failed to fetch version info.
+echo Press any key to continue without updating the version.
+set "ErrorVersion=true"
+call :starter
+exit /b
 
-:: Extract version
+:ProcessVersion
+set Ver="1.0.1"
+:: Extract new version from downloaded file
 set "Newver="
 for /f "delims=" %%i in (%TempFile%) do set "Newver=%%i"
 if "%Newver%"=="" (
-cls
-    echo Failed to read version info from %TempFile%. >> %LogFile%
-    echo Failed to read version info from %TempFile%.
-    echo pause Any Key to No this Version and no show new Version
-    pause
-	set "ErrorVersion=true"
-	goto MenuLoop
+    echo [%date% %time%] Failed to read version info from %TempFile%. >> %LogFile%
+    echo Press any key to continue without updating the version.
+    set "ErrorVersion=true"
+    call :menu
 )
-
-:: Example current version; ideally this should be dynamically managed
-set "Ver=1.0.0"
-
-:: Convert version to numbers for comparison
+:: Convert versions to numbers for comparison
 for /f "tokens=1,2,3 delims=." %%a in ("%Ver%") do (
     set /a Ver1=%%a
     set /a Ver2=%%b
@@ -49,27 +52,30 @@ for /f "tokens=1,2,3 delims=." %%a in ("%Newver%") do (
     set /a Newver2=%%b
     set /a Newver3=%%c
 )
-
 :: Compare versions
 set "VersionUpdateNeeded=false"
-if %Ver1% LSS %Newver1% (
+if !Ver1! LSS !Newver1! (
     set "VersionUpdateNeeded=true"
-) else if %Ver1% EQU %Newver1% (
-    if %Ver2% LSS %Newver2% (
+) else if !Ver1! EQU !Newver1! (
+    if !Ver2! LSS !Newver2! (
         set "VersionUpdateNeeded=true"
-    ) else if %Ver2% EQU %Newver2% (
-        if %Ver3% LSS %Newver3% (
+    ) else if !Ver2! EQU !Newver2! (
+        if !Ver3! LSS !Newver3! (
             set "VersionUpdateNeeded=true"
         )
     )
 )
 
-:: Fetch update content
+:: Log version comparison result
+echo [%date% %time%] Current version: %Ver%, New version: %Newver%. Update needed: %VersionUpdateNeeded% >> %LogFile%
+
+:: Fetch update content and code
 set "OF_URL=https://nittarpp.github.io/SpeedWave/Data/update.html"
 set "TempFile=%temp%\of.txt"
-curl -s %OF_URL% > %TempFile% 2>> %LogFile%
-if %ERRORLEVEL% NEQ 0 (
-    echo Failed to fetch content. >> %LogFile%
+curl -s --max-time 10 %OF_URL% > "%TempFile%" 2>> "%LogFile%"
+
+if !ERRORLEVEL! NEQ 0 (
+    echo [%date% %time%] Failed to fetch content. >> %LogFile%
     echo Failed to fetch content.
     pause
     exit /b
@@ -77,9 +83,10 @@ if %ERRORLEVEL% NEQ 0 (
 
 set "Code_Url=https://nittarpp.github.io/SpeedWave/Data/code.html"
 set "CodeFile=%temp%\code.txt"
-curl -s %Code_Url% > %CodeFile% 2>> %LogFile%
-if %ERRORLEVEL% NEQ 0 (
-    echo Failed to fetch code. >> %LogFile%
+curl -s --max-time 10 %Code_Url% > "%CodeFile%" 2>> "%LogFile%"
+
+if !ERRORLEVEL! NEQ 0 (
+    echo [%date% %time%] Failed to fetch code. >> %LogFile%
     echo Failed to fetch code.
     pause
     exit /b
@@ -88,237 +95,106 @@ if %ERRORLEVEL% NEQ 0 (
 :: Read the content
 set "Content="
 for /f "delims=" %%i in (%TempFile%) do set "Content=%%i"
-echo Content from %TempFile%: %Content% >> %LogFile%
+echo [%date% %time%] Content from %TempFile%: %Content% >> %LogFile%
 
 :: Determine action based on fetched content
 if "%Content%"=="Normal" (
-    goto MenuLoop
+    call :starter
 ) else if "%Content%"=="Event" (
-    goto Event
+    call :Event
 ) else if "%Content%"=="Temporarily disabled" (
-    goto Temporarily
+    call :Temporarily
 ) else if "%Content%"=="Error" (
-    echo Error in fetching web data. >> %LogFile%
+    echo [%date% %time%] Error in fetching web data. >> %LogFile%
     exit /b
 ) else (
-    echo Error retrieving web data. >> %LogFile%
+    echo [%date% %time%] Unknown response from web: %Content%. >> %LogFile%
     pause
     exit /b
 )
-
-:: Function to check for admin privileges
-:CheckAdmin
-fltmc 1>nul 2>nul || (
-    echo Set UAC = CreateObject^("Shell.Application"^) : UAC.ShellExecute "cmd.exe", "/k cd ""%~dp0"" && ""%~dpnx0"" ""%_Args%""", "", "runas", 1 > "%temp%\GetAdmin.vbs"
-    "%temp%\GetAdmin.vbs"
-    del /f /q "%temp%\GetAdmin.vbs" 1>nul 2>nul
-    exit
-)
-:Update
-echo ------------------------------------------------------------------------
-echo SpeedWave - PC Speed Booster
-echo ------------------------------------------------------------------------
-echo.
-echo SpeedWave Need Update For More Booster And Fast For You Pc
-pause
-start https://nittarpp.github.io/SpeedWave/Website/
-:MenuLoop
-:: Display Menu and handle choices
-cls
-echo ------------------------------------------------------------------------
-echo SpeedWave - PC Speed Booster
-echo ------------------------------------------------------------------------
-echo Options:
-echo 1. Clear temporary files
-echo 2. Run disk cleanup
-echo 3. Defragment drives (if needed)
-echo 4. Check disk for errors
-echo 5. Update system drivers
-echo 6. Turn off all performance optimizations
-echo 7. Best To Play Game
-echo 8. Exit
-echo 9. Power Plan And Clear
-echo 10. Loop Clear Temp (Press Q to stop)
-echo 11. Backup and Restore
-echo 12. Check System Integrity
-echo Update
-echo Game Mod
-echo ------------------------------------------------------------------------
-
-if "%VersionUpdateNeeded%"=="true" (
-    echo New version available: %Newver%. Use 'Update' to get the new version.
-    echo.
-    set "UpdateScript=%temp%\update_script.bat"
-    "%UpdateScript%" = goto
-    :: Execute the update script
-    echo.
-    call "%UpdateScript%"
-) else if "%ErrorVersion%"=="true" (
-echo Failed to loading version and new version
-) else (
-    echo You have the latest version %Ver%
-)
-
-echo ------------------------------------------------------------------------
-set /p choice=Enter your choice (1-12, Update): 
-
-:: Handle choices
-if "%choice%"=="1" (
-    echo Clearing temporary files...
-    del /s /f /q C:\Windows\Temp\*.* 2>> %LogFile%
-    del /s /f /q C:\Users\%username%\AppData\Local\Temp\*.* 2>> %LogFile%
-    echo Temporary files cleared. >> %LogFile%
-    goto MenuLoop
-) else if "%choice%"=="2" (
-    echo Running disk cleanup...
-    cleanmgr /sagerun:1
-    echo Disk cleanup completed. >> %LogFile%
-    goto MenuLoop
-) else if "%choice%"=="3" (
-    echo Defragmenting drives...
-    defrag C: /U /V
-    echo Drive defragmentation completed. >> %LogFile%
-    goto MenuLoop
-) else if "%choice%"=="4" (
-    echo Checking disk for errors...
-    chkdsk C: /f /r /x
-    echo Disk check completed. Please restart your computer if prompted. >> %LogFile%
-    goto MenuLoop
-) else if "%choice%"=="5" (
-    echo Updating system drivers...
-    driverquery
-    echo Driver update check completed. >> %LogFile%
-    goto MenuLoop
-) else if "%choice%"=="6" (
-    echo Turning off all performance optimizations...
-    reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects" /v VisualFXSetting /t REG_DWORD /d 2 /f
-    echo All performance optimizations turned off. >> %LogFile%
-    goto MenuLoop
-) else if "%choice%"=="7" (
-    echo Executing system optimizations for gaming...
-    reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects" /v VisualFXSetting /t REG_DWORD /d 2 /f
-    chkdsk C: /f /r /x
-    cleanmgr /sagerun:1
-    del /s /f /q C:\Windows\Temp\*.* 2>> %LogFile%
-    del /s /f /q C:\Users\%username%\AppData\Local\Temp\*.* 2>> %LogFile%
-    echo System optimizations for gaming completed. >> %LogFile%
-
-
-echo Import Best Ultiamte Performance Power Plan
-powercfg -duplicatescheme e9a42b02-d5df-448d-aa00-03f14749eb61
-echo Delete Balanced - Power Saving - High Performance
-powercfg -delete 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c
-powercfg -delete 381b4222-f694-41f0-9685-ff5bb260df2e
-powercfg -delete a1841308-3541-4fab-bc81-f71556f20b4a 
-net stop wuauserv
-net stop UsoSvc
-rd /s /q C:\Windows\SoftwareDistribution
-md C:\Windows\SoftwareDistribution
-RD /S /Q %temp%
-MKDIR %temp%
-takeown /f "%temp%" /r /d y
-takeown /f "C:\Windows\Temp" /r /d y
-RD /S /Q C:\Windows\Temp
-MKDIR C:\Windows\Temp
-takeown /f "C:\Windows\Temp" /r /d y
-takeown /f %temp% /r /d y
-
-RD /S /Q %temp%
-MKDIR %temp%
-takeown /f "%temp%" /r /d y
-takeown /f "C:\Windows\Temp" /r /d y
-RD /S /Q C:\Windows\Temp
-MKDIR C:\Windows\Temp
-takeown /f "C:\Windows\Temp" /r /d y
-takeown /f %temp% /r /d y
-pause
-    
-    echo Resetting Windows Update...
-    net stop wuauserv
-    net stop UsoSvc
-    rd /s /q C:\Windows\SoftwareDistribution
-    md C:\Windows\SoftwareDistribution
-    pause
-    
-    echo Clearing temporary files again...
-    RD /S /Q %temp%
-    MKDIR %temp%
-    RD /S /Q C:\Windows\Temp
-    MKDIR C:\Windows\Temp
-    takeown /f %temp% /r /d y
-    icacls %temp% /grant administrators:F /T
-    takeown /f C:\Windows\Temp /r /d y
-    icacls C:\Windows\Temp /grant administrators:F /T
-    
-    echo Completed!
-    pause
-    goto MenuLoop
-) else if "%choice%"=="8" (
-    exit
-) else if "%choice%"=="9" (
-    echo Clearing and setting the best power plan...
-    echo Import Best Ultiamte Performance Power Plan
-powercfg -duplicatescheme e9a42b02-d5df-448d-aa00-03f14749eb61
-echo Delete Balanced - Power Saving - High Performance
-powercfg -delete 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c
-powercfg -delete 381b4222-f694-41f0-9685-ff5bb260df2e
-powercfg -delete a1841308-3541-4fab-bc81-f71556f20b4a 
-net stop wuauserv
-net stop UsoSvc
-rd /s /q C:\Windows\SoftwareDistribution
-md C:\Windows\SoftwareDistribution
-RD /S /Q %temp%
-MKDIR %temp%
-takeown /f "%temp%" /r /d y
-takeown /f "C:\Windows\Temp" /r /d y
-RD /S /Q C:\Windows\Temp
-MKDIR C:\Windows\Temp
-takeown /f "C:\Windows\Temp" /r /d y
-takeown /f %temp% /r /d y
-    pause
-    goto MenuLoop
-) else if "%choice%"=="10" (
-    :LoopClearTemp
-    cls
-    echo Clearing temporary files in a loop. Press Q to stop.
-    del /s /f /q C:\Windows\Temp\*.* 2>> %LogFile%
-    del /s /f /q C:\Users\%username%\AppData\Local\Temp\*.* 2>> %LogFile%
-    choice /c Q /n /t 2 /d Y
-    if errorlevel 2 goto LoopClearTemp
-    goto MenuLoop
-) else if "%choice%"=="11" (
-    echo Backup and restore options will be implemented here.
-    pause
-    goto MenuLoop
-) else if "%choice%"=="12" (
-    echo Checking system integrity...
-    sfc /scannow
-    echo System integrity check completed. >> %LogFile%
-    pause
-    goto MenuLoop
-) else if "%choice%"=="Update" (
-    if "%VersionUpdateNeeded%"=="true" (
-        echo Applying update...
-        call "%UpdateScript%"
-        pause
-    ) else (
-        echo No updates are available.
-        pause
-    )
-    goto MenuLoop
-) else (
-    cls
-    echo Invalid choice. Please try again.
-    pause
-    goto MenuLoop
-)
+goto :starter
 
 :Event
-echo Event mode activated. This feature can be customized further.
-pause
-goto MenuLoop
+cls
+echo.
+echo           ███████╗██████╗ ███████╗███████╗██████╗     ██╗    ██╗ █████╗ ██╗   ██╗███████╗
+echo           ██╔════╝██╔══██╗██╔════╝██╔════╝██╔══██╗    ██║    ██║██╔══██╗██║   ██║██╔════╝
+echo           ███████╗██████╔╝█████╗  █████╗  ██║  ██║    ██║ █╗ ██║███████║██║   ██║█████╗  
+echo           ╚════██║██╔═══╝ ██╔══╝  ██╔══╝  ██║  ██║    ██║███╗██║██╔══██║╚██╗ ██╔╝██╔══╝  
+echo           ███████║██║     ███████╗███████╗██████╔╝    ╚███╔███╔╝██║  ██║ ╚████╔╝ ███████╗
+echo           ╚══════╝╚═╝     ╚══════╝╚══════╝╚═════╝      ╚══╝╚══╝ ╚═╝  ╚═╝  ╚═══╝  ╚══════╝
+echo.
+echo                                                   Event
+echo.
+goto Event
 
 :Temporarily
-echo SpeedWave is temporarily disabled. Please check back later.
-pause
-exit /b
+cls
+echo.
+echo           ███████╗██████╗ ███████╗███████╗██████╗     ██╗    ██╗ █████╗ ██╗   ██╗███████╗
+echo           ██╔════╝██╔══██╗██╔════╝██╔════╝██╔══██╗    ██║    ██║██╔══██╗██║   ██║██╔════╝
+echo           ███████╗██████╔╝█████╗  █████╗  ██║  ██║    ██║ █╗ ██║███████║██║   ██║█████╗  
+echo           ╚════██║██╔═══╝ ██╔══╝  ██╔══╝  ██║  ██║    ██║███╗██║██╔══██║╚██╗ ██╔╝██╔══╝  
+echo           ███████║██║     ███████╗███████╗██████╔╝    ╚███╔███╔╝██║  ██║ ╚████╔╝ ███████╗
+echo           ╚══════╝╚═╝     ╚══════╝╚══════╝╚═════╝      ╚══╝╚══╝ ╚═╝  ╚═╝  ╚═══╝  ╚══════╝
+echo.
+echo                                               Temporarily
+echo.
+goto Temporarily
+
+:starter
+cls
+call :banner
+:menu
+echo.
+if "%VersionUpdateNeeded%"=="true" (
+    echo New version available: %Newver%. Use 'Update' to get the new version.
+) else if "%ErrorVersion%"=="true" (
+    echo Failed to load version and new version.
+) else (
+    echo You have the latest version %Ver%.
+)
+echo.
+echo         ╔═ (1) Clear temporary files
+echo         ╠═ (2) Run disk cleanup
+echo         ╠═ (3) Optimize startup programs
+echo         ╠═ (4) Check for system updates
+echo         ╠═══ (5) Exit
+echo.
+set /p input=Enter your choice :
+if "%input%"=="1" (
+    cls
+    call :CTF
+) else if "%input%"=="2" (
+    cls
+    cleanmgr /sagerun:1
+    goto :menu
+) else if "%input%"=="3" (
+    cls
+    call :FetchData
+) else if "%input%"=="4" (
+    cls
+    call :FetchData
+) else if "%input%"=="5" (
+    exit
+) else (
+    goto :menu
+)
+
+:CTF
+echo Deleting temporary files... Progress: 50%
+del /f /s /q %temp%\* > nul
+echo Temporary files deleted.
+timeout /t 2 > nul
+goto :menu
+
+:banner
+cls
+echo.
+echo           ███████╗██████╗ ███████╗███████╗██████╗     ██╗    ██╗ █████╗ ██╗   ██╗███████╗
+echo           ██╔════╝██╔══██╗██╔════╝██╔════╝██╔══██╗    ██║    ██║██╔══██╗██║   ██║██╔════╝
+echo           ███████╗██████╔╝█████╗  █████╗  ██║  ██║    ██║ █╗ ██║███████║██║   ██║█████╗  
+echo           ╚════██║██╔═══╝ ██╔══╝  ██╔══╝  ██║  ██║    ██║███╗██║██╔══██║╚██╗ ██╔╝██╔══╝  
+echo           ███████║██║     ███████╗███████╗██████╔╝    ╚███╔███╔╝██║  ██║ ╚████╔╝ ███████╗
+echo           ╚══════╝╚═╝     ╚══════╝╚══════╝╚═════╝      ╚══╝╚══╝ ╚═╝  ╚═╝  ╚═══╝  ╚══════╝
+echo.
