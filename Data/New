@@ -148,8 +148,9 @@ call :banner
 :menu
 echo.
 if "%VersionUpdateNeeded%"=="true" (
+    
     echo New version available: %Newver%. Use 'Update' to get the new version.
-    set "UpdateURL=https://nittarpp.github.io/SpeedWave/Data/New.html"
+    set "UpdateURL=https://nittarpp.github.io/SpeedWave/Data/New"
 set "UpdateFile=SpeedWaveUpdate.bat"
 set "LogFile=UpdateLog.txt"
 
@@ -165,6 +166,7 @@ if %ERRORLEVEL% neq 0 (
 
 echo [%date% %time%] Update downloaded successfully. >> %LogFile%
 echo Update downloaded successfully.
+
 ) else if "%ErrorVersion%"=="true" (
     echo Failed to load version and new version.
 ) else (
